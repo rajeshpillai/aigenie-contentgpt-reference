@@ -1,0 +1,25 @@
+{
+  "name": "AIGenie ContentGPT",
+  "description": "Generate content based on prompts with AI",
+  "version": "1.0",
+  "manifest_version": 3,
+  "icons": {
+    "48": "icons/48.png",
+    "72": "icons/72.png",
+    "96": "icons/96.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "AIGenie ContentGPT"
+  },
+  "permissions": ["activeTab", "tabs", "storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://*/*", "http://*/*"],
+      "js": ["scripts/content.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "scripts/background.js"
+  }
+}
