@@ -1,3 +1,4 @@
+// Receive request from browser 
 chrome.runtime.onMessage.addListener((request, sender) => {
   if (request.message === "generate_ai") {
     //console.log("BACKEND: ", request.content);
@@ -27,11 +28,11 @@ const generateAiResponse = async ({ command, text }) => {
       case "blog":
         prompt = `Write me a blog post about ${text}`;
         break;
-      case "japanese":
-        prompt = `Translate the below text to Japanese: ${text}`;
+      case "hindi":
+        prompt = `Translate the below text to Hindi: ${text}`;
         break;
-      case "javascript":
-        prompt = `Write a Javascript code that ${text}. I do not want any explainations, notes or text reply other than code blocks at all. Please reponse in the format of code blocks only.`;
+      case "code":
+        prompt = `Write that ${text}. I do not want any explainations, notes or text reply other than code blocks at all. Please reponse in the format of code blocks only.`;
         break;
       default:
         prompt = text;
@@ -105,6 +106,8 @@ const sendResponseMessage = async (content) => {
     active: true,
     lastFocusedWindow: true,
   });
+
+  console.log("Active Tab: ", tab);
 
   chrome.tabs.sendMessage(tab.id, {
     message: "inject_ai",
