@@ -1,56 +1,6 @@
-// Receive request from browser 
-chrome.runtime.onMessage.addListener((request, sender) => {
-  if (request.message === "generate_ai") {
-    //console.log("BACKEND: ", request.content);
-    const prompt = getPrompt(request.content);
-    //console.log(prompt);
-    generateAiResponse(prompt);
-  }
-});
-
-const getPrompt = (str) => {
-  const index = str.indexOf(":");
-  const command = str.slice(0, index);
-  const text = str.slice(index + 1);
-
-  return { command, text };
-};
-
-const generateAiResponse = async ({ command, text }) => {
-  sendResponseMessage("AIGenie is generating content...");
-  try {
-    // Step #1: Create new prompt based on user's command
-    var prompt = "";
-    switch (command) {
-      case "tweet":
-        prompt = `Write me a tweet about ${text}`;
-        break;
-      case "blog":
-        prompt = `Write me a blog post about ${text}`;
-        break;
-      case "hindi":
-        prompt = `Translate the below text to Hindi: ${text}`;
-        break;
-      case "code":
-        prompt = `Write that ${text}. I do not want any explainations, notes or text reply other than code blocks at all. Please reponse in the format of code blocks only.`;
-        break;
-      default:
-        prompt = text;
-    }
-
-    console.log("New prompt: ", prompt);
-
-    // Step #2: Generate content with new prompt
-    const response = await generateContent(prompt); 
-    const result = response.replace(/^\n\n/, "");  // Remove the first "\n\n" from the response
-
-    console.log("Generated content: ", result);
-    sendResponseMessage(result);
-
-  } catch (error) {
-    console.log(error);
-  }
-};
+// ---------------------
+// 1. Utility Functions
+// ---------------------
 
 // Fetch api key from local storage
 const getApiKey = async () => {
@@ -67,7 +17,6 @@ const getApiKey = async () => {
     });
   });
 };
-
 
 const generateContent = async (prompt) => {
   const key = await getApiKey();
@@ -114,3 +63,63 @@ const sendResponseMessage = async (content) => {
     content,
   });
 };
+
+// ---------------------
+// 2. Main Logic
+// ---------------------
+
+const getPrompt = (str) => {
+  const index = str.indexOf(":");
+  const command = str.slice(0, index);
+  const text = str.slice(index + 1);
+
+  return { command, text };
+};
+
+const generateAiResponse = async ({ command, text }) => {
+  sendResponseMessage("AIGenie is generating content...");
+  try {
+    // Step #1: Create new prompt based on user's command
+    var prompt = "";
+    switch (command) {
+      case "tweet":
+        prompt = `Write me a tweet about ${text}`;
+        break;
+      case "blog":
+        prompt = `Write me a blog post about ${text}`;
+        break;
+      case "hindi":
+        prompt = `Translate the below text to Hindi: ${text}`;
+        break;
+      case "code":
+        prompt = `Write that ${text}. I do not want any explainations, notes or text reply other than code blocks at all. Please reponse in the format of code blocks only.`;
+        break;
+      default:
+        prompt = text;
+    }
+
+    console.log("New prompt: ", prompt);
+
+    // Step #2: Generate content with new prompt
+    const response = await generateContent(prompt); 
+    const result = response.replace(/^\n\n/, "");  // Remove the first "\n\n" from the response
+
+    console.log("Generated content: ", result);
+    sendResponseMessage(result);
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// ---------------------
+// 3. Event Listeners
+// ---------------------
+
+// Receive request from browser 
+chrome.runtime.onMessage.addListener((request, sender) => {
+  if (request.message === "generate_ai") {
+    const prompt = getPrompt(request.content);
+    generateAiResponse(prompt);
+  }
+});
