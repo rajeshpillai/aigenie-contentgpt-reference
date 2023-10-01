@@ -78,6 +78,7 @@ const getPrompt = (str) => {
 
 const generateAiResponse = async ({ command, text }) => {
   sendResponseMessage("AIGenie is generating content...");
+  console.log(`Command: ${command}, Text: ${text}`);
   try {
     // Step #1: Create new prompt based on user's command
     var prompt = "";
@@ -120,6 +121,7 @@ const generateAiResponse = async ({ command, text }) => {
 chrome.runtime.onMessage.addListener((request, sender) => {
   if (request.message === "generate_ai") {
     const prompt = getPrompt(request.content);
+    console.log("prompt: ", prompt);
     generateAiResponse(prompt);
   }
 });
