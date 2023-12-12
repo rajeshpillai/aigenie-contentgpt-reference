@@ -93,8 +93,10 @@ const generateAiResponse = async ({ command, text }) => {
         prompt = `Translate the below text to Hindi: ${text}`;
         break;
       case "code":
-        prompt = `Write that ${text}. I do not want any explainations, notes or text reply other than code blocks at all. Please reponse in the format of code blocks only.`;
+        prompt = `Write that ${text}. I do not want any explanations, notes or text reply other than code blocks at all. Please reponse in the format of code blocks only.`;
         break;
+      case "joke":
+        prompt = `A random joke/humour on  ${text}. `;
       default:
         prompt = text;
     }
