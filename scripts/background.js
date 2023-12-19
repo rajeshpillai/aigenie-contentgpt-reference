@@ -127,3 +127,5 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     generateAiResponse(prompt);
   }
 });
+
+chrome.runtime.onConnect.addListener(port => {});

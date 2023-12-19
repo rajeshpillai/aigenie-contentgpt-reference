@@ -8,7 +8,7 @@ const isEndsWithPlusSign = (str) => {
 
 const sendTriggerMessage = (text) => {
   //console.log(`Generating AI content for "${text}"`);
-  insert(`Generating AI content for “${text}”`);
+  insert(`~Generating AI content for “${text}”~`);
   // Send text to the background script 
   chrome.runtime.sendMessage({ 
     message: "generate_ai",
@@ -17,18 +17,61 @@ const sendTriggerMessage = (text) => {
 };
 
 // Update the target website input with the generated content
-const insert = (content) => {
+const insert1 = (content) => {
   var element = document.activeElement;
-
   if (element.nodeName === "TEXTAREA" || element.nodeName === "INPUT") {
     element.value = content;
   } else {
     element.innerText = content;
   }
-
   return true;
 };
 
+const insert2 = (content, replace = false) => {
+  var element = document.activeElement;
+
+  // Check if the active element is a textarea or input field
+  if (element.nodeName === "TEXTAREA" || element.nodeName === "INPUT") {
+    if (replace) {
+      element.value = content;
+    } else {
+      element.value += content; // Append the content
+    }
+  } else {
+    if (replace) {
+      element.innerText = content;
+    } else {
+      element.innerText += content; // Append the content
+    }
+  }
+  return true;
+};
+
+const insert = (content, replace = true) => {
+  var element = document.activeElement;
+
+  // Define a regular expression to find content within tildes
+  const tildeContentRegex = /~.*?~/;
+
+  // Check if the active element is a textarea or input field
+  if (element.nodeName === "TEXTAREA" || element.nodeName === "INPUT") {
+    if (replace) {
+      // Replace the entire value if replace is true
+      element.value = content;
+    } else {
+      // Replace only the content within tildes
+      element.value = element.value.replace(tildeContentRegex, content);
+    }
+  } else {
+    if (replace) {
+      element.innerText = content;
+    } else {
+      element.innerText = element.innerText.replace(tildeContentRegex, content);
+    }
+  }
+
+  return true;
+};
 
 
 
