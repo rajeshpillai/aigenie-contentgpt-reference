@@ -30,7 +30,7 @@ const generateContent = async (prompt) => {
       Authorization: `Bearer ${key}`,
     },
     body: JSON.stringify({
-      model: "text-davinci-003",
+      model: "gpt-3.5-turbo-instruct",
       prompt: prompt,
       max_tokens: 1250,
       temperature: 0.75,
