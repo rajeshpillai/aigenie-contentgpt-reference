@@ -17,36 +17,6 @@ const sendTriggerMessage = (text) => {
 };
 
 // Update the target website input with the generated content
-const insert1 = (content) => {
-  var element = document.activeElement;
-  if (element.nodeName === "TEXTAREA" || element.nodeName === "INPUT") {
-    element.value = content;
-  } else {
-    element.innerText = content;
-  }
-  return true;
-};
-
-const insert2 = (content, replace = false) => {
-  var element = document.activeElement;
-
-  // Check if the active element is a textarea or input field
-  if (element.nodeName === "TEXTAREA" || element.nodeName === "INPUT") {
-    if (replace) {
-      element.value = content;
-    } else {
-      element.value += content; // Append the content
-    }
-  } else {
-    if (replace) {
-      element.innerText = content;
-    } else {
-      element.innerText += content; // Append the content
-    }
-  }
-  return true;
-};
-
 const insert = (content, replace = true) => {
   var element = document.activeElement;
 
