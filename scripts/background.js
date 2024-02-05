@@ -50,15 +50,15 @@ const generateContent = async (prompt) => {
 };
 
 // Send the generated content to the content script
-const sendResponseMessage = async (content) => {
-  const [tab] = await chrome.tabs.query({
-    active: true,
-    lastFocusedWindow: true,
-  });
+const sendResponseMessage = async (content, tabId) => {
+  // const [tab] = await chrome.tabs.query({
+  //   active: true,
+  //   lastFocusedWindow: true,
+  // });
 
-  console.log("Active Tab: ", tab);
+  console.log("TabID: ", tabId);
 
-  chrome.tabs.sendMessage(tab.id, {
+  chrome.tabs.sendMessage(tabId, {
     message: "inject_ai",
     content,
   });
@@ -76,8 +76,8 @@ const getPrompt = (str) => {
   return { command, text };
 };
 
-const generateAiResponse = async ({ command, text }) => {
-  sendResponseMessage("AIGenie is generating content...");
+const generateAiResponse = async ({ command, text }, tabId) => {
+  sendResponseMessage("AIGenie is generating content...", tabId);
   console.log(`Command: ${command}, Text: ${text}`);
   try {
     // Step #1: Create new prompt based on user's command
@@ -108,7 +108,7 @@ const generateAiResponse = async ({ command, text }) => {
     const result = response.replace(/^\n\n/, "");  // Remove the first "\n\n" from the response
 
     console.log("Generated content: ", result);
-    sendResponseMessage(result);
+    sendResponseMessage(result, tabId);
 
   } catch (error) {
     console.log(error);
@@ -121,10 +121,11 @@ const generateAiResponse = async ({ command, text }) => {
 
 // Receive request from browser 
 chrome.runtime.onMessage.addListener((request, sender) => {
+  const tabId = sender.tab.id;
   if (request.message === "generate_ai") {
     const prompt = getPrompt(request.content);
     console.log("prompt: ", prompt);
-    generateAiResponse(prompt);
+    generateAiResponse(prompt, tabId);
   }
 });
 

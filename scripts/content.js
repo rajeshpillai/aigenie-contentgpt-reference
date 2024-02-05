@@ -65,6 +65,7 @@ const handleInputEvent = (event) => {
 // Process incoming messages from the background script
 const handleMessage = (request, sender, sendResponse) => {
   if (request.message === "inject_ai") {
+    console.log(`Received from service worker: ${request.content}`);
     insert(request.content);
   }
 };
